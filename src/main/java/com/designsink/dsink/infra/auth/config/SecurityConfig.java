@@ -94,6 +94,7 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((auth) -> auth
 			.requestMatchers("/users/login", "/users/register").permitAll()
+			.requestMatchers("/main-page/**").hasRole("ADMIN")
 			.anyRequest().authenticated()
 		);
 

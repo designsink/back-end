@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: dsink
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      pool-name: HikariCP
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      validation-timeout: 10000
+      max-lifetime: 580000
+      connection-init-sql: set wait_timeout = 600
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+

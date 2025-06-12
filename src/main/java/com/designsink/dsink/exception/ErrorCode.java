@@ -20,9 +20,11 @@ public enum ErrorCode {
 	FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "FILE_002", "파일 크기가 너무 큽니다. 최대 허용 크기는 5MB 바이트 입니다."),
 
 	// 회원 관련 에러
-
 	USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "USER_001", "이미 존재하는 회원입니다."),
-	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER_002", "이메일 또는 비밀번호가 잘못됐습니다.");
+	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER_002", "이메일 또는 비밀번호가 잘못됐습니다."),
+
+	// 메인 페이지 관련 에러
+	NOT_FOUND_PAGE_INFO(HttpStatus.NOT_FOUND, "MAIN_001", "메인 페이지 정보가 없습니다.");
 
 
 	// http 상태 코드
