@@ -7,7 +7,7 @@ import com.designsink.dsink.entity.info.MainPageInfo;
 import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.info.MainPageInfoRepository;
-import com.designsink.dsink.service.info.dto.request.MainPageInfoCreateRequestDto;
+import com.designsink.dsink.service.info.dto.request.MainPageInfoRequestDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class MainPageInfoService {
 	private final MainPageInfoRepository mainPageInfoRepository;
 
 	@Transactional
-	public void create(MainPageInfoCreateRequestDto requestDto) {
+	public void create(MainPageInfoRequestDto requestDto) {
 
 		MainPageInfo newMainPageInfo = MainPageInfo.builder()
 			.title(requestDto.getTitle())
@@ -38,7 +38,7 @@ public class MainPageInfoService {
 	}
 
 	@Transactional
-	public void update(Integer infoId, MainPageInfoCreateRequestDto requestDto) {
+	public void update(Integer infoId, MainPageInfoRequestDto requestDto) {
 		MainPageInfo findInfo = mainPageInfoRepository.findById(infoId)
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PAGE_INFO));
 

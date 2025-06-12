@@ -1,6 +1,6 @@
 package com.designsink.dsink.entity.info;
 
-import com.designsink.dsink.service.info.dto.request.MainPageInfoCreateRequestDto;
+import com.designsink.dsink.service.info.dto.request.MainPageInfoRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +53,7 @@ public class MainPageInfo {
 	@Column(length = 13)
 	private String phone;
 
-	public void updateInfo(MainPageInfoCreateRequestDto requestDto) {
+	public void updateInfo(MainPageInfoRequestDto requestDto) {
 		this.title = requestDto.getTitle();
 		this.description = requestDto.getDescription();
 		this.storeName = requestDto.getStoreName();
