@@ -18,6 +18,9 @@ public enum ErrorCode {
 	// 파일 관련 에러
 	FILE_EMPTY(HttpStatus.BAD_REQUEST, "FILE_001", "파일이 비어있습니다."),
 	FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "FILE_002", "파일 크기가 너무 큽니다. 최대 허용 크기는 5MB 바이트 입니다."),
+	FILE_STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_003", "파일 저장 중 오류가 발생했습니다."),
+	DIRECTORY_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_004", "업로드 디렉터리 생성 중 오류가 발생했습니다."),
+	FILE_CATEGORY_ERROR(HttpStatus.BAD_REQUEST, "FILE_005", "올바르지 않은 카테고리입니다."),
 
 	// 회원 관련 에러
 	USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "USER_001", "이미 존재하는 회원입니다."),
