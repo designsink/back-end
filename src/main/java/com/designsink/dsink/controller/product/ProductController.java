@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.designsink.dsink.entity.product.Product;
 import com.designsink.dsink.service.product.ProductService;
-import com.designsink.dsink.service.product.dto.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
 
 import lombok.RequiredArgsConstructor;
 

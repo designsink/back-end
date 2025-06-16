@@ -1,4 +1,4 @@
-package com.designsink.dsink.service.product.dto;
+package com.designsink.dsink.service.product.dto.request;
 
 import java.util.List;
 

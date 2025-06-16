@@ -18,7 +18,7 @@ import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.repository.product.ProductRepository;
-import com.designsink.dsink.service.product.dto.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
 
 import lombok.RequiredArgsConstructor;
 
