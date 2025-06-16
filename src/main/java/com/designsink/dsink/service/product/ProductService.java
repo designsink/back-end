@@ -81,8 +81,10 @@ public class ProductService {
 
 	@Transactional
 	public void delete(Integer productId) {
-		productRepository.deleteById(productId);
-		productItemRepository.deleteAllByProductId(productId);
+		Product findProduct = productRepository.findById(productId)
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+		findProduct.delete();
 	}
 
 	public List<Map<String, String>> getCategories() {
