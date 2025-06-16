@@ -21,14 +21,17 @@ public enum ErrorCode {
 	FILE_STORAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_003", "파일 저장 중 오류가 발생했습니다."),
 	DIRECTORY_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_004", "업로드 디렉터리 생성 중 오류가 발생했습니다."),
 	FILE_CATEGORY_ERROR(HttpStatus.BAD_REQUEST, "FILE_005", "올바르지 않은 카테고리입니다."),
+	FILE_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_006", "파일 삭제 중 오류가 발생했습니다."),
 
 	// 회원 관련 에러
 	USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "USER_001", "이미 존재하는 회원입니다."),
 	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER_002", "이메일 또는 비밀번호가 잘못됐습니다."),
 
 	// 메인 페이지 관련 에러
-	NOT_FOUND_PAGE_INFO(HttpStatus.NOT_FOUND, "MAIN_001", "메인 페이지 정보가 없습니다.");
+	NOT_FOUND_PAGE_INFO(HttpStatus.NOT_FOUND, "MAIN_001", "메인 페이지 정보가 없습니다."),
 
+	//상품 관련 에러
+	NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "PRODUCT_001", "상품 정보가 없습니다.");
 
 	// http 상태 코드
 	private final HttpStatus status;
