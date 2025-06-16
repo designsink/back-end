@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.designsink.dsink.entity.product.enums.ProductType;
 import com.designsink.dsink.service.product.ProductService;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.response.ProductDetailResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,11 @@ public class ProductController {
 	public ResponseEntity<List<ProductsResponseDto>> getAllProducts(
 		@RequestParam(required = false) ProductType category) {
 		return ResponseEntity.ok().body(productService.findAll(category));
+	}
+
+	@GetMapping("/{productId}")
+	public ResponseEntity<ProductDetailResponseDto> getProductById(@PathVariable Integer productId) {
+		return ResponseEntity.ok().body(productService.findById(productId));
 	}
 
 	@GetMapping("/categories")
