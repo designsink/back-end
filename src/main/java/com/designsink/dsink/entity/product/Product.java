@@ -2,9 +2,10 @@ package com.designsink.dsink.entity.product;
 
 import java.util.List;
 
-import org.hibernate.annotations.SQLRestriction;
+import com.designsink.dsink.entity.common.TimeStampEntity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,12 +24,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class Product {
+public class Product extends TimeStampEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(unique = true)
 	private String path;
 
 	@Builder.Default

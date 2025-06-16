@@ -1,5 +1,6 @@
 package com.designsink.dsink.entity.product;
 
+import com.designsink.dsink.entity.common.TimeStampEntity;
 import com.designsink.dsink.entity.product.enums.ProductType;
 
 import jakarta.persistence.Column;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class ProductItem {
+public class ProductItem extends TimeStampEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

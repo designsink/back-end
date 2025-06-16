@@ -1,5 +1,6 @@
 package com.designsink.dsink.entity.info;
 
+import com.designsink.dsink.entity.common.TimeStampEntity;
 import com.designsink.dsink.service.info.dto.common.MainPageInfoDto;
 
 import jakarta.persistence.Column;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class MainPageInfo {
+public class MainPageInfo extends TimeStampEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
