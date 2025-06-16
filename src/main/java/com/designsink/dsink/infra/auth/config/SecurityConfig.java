@@ -94,8 +94,9 @@ public class SecurityConfig {
 		// 경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth
-			.requestMatchers(HttpMethod.GET, "/main-page/**", "/categories").permitAll()
+			.requestMatchers(HttpMethod.GET, "/main-page/**", "/products/categories").permitAll()
 			.requestMatchers("/main-page/**", "/products").hasRole("ADMIN")
+			.requestMatchers(HttpMethod.DELETE, "/products").hasRole("ADMIN")
 			.anyRequest().authenticated()
 		);
 
