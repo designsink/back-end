@@ -60,4 +60,12 @@ public class FileStorageService {
 
 		return filename;
 	}
+
+	public void delete(String filename) {
+		try {
+			Files.deleteIfExists(rootLocation.resolve(filename));
+		} catch (IOException ex) {
+			throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
+		}
+	}
 }
