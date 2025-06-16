@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.designsink.dsink.entity.product.enums.ProductType;
 import com.designsink.dsink.service.product.ProductService;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +35,15 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/{productId}")
-	public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
-		return ResponseEntity.ok().body("<UNK> <UNK> <UNK>");
+	public ResponseEntity<String> deleteProduct(@PathVariable Integer productId) {
+		productService.delete(productId);
+		return ResponseEntity.ok().body("상품 삭제 성공");
+	}
+
+	@GetMapping
+	public ResponseEntity<List<ProductsResponseDto>> getAllProducts(
+		@RequestParam(required = false) ProductType category) {
+		return ResponseEntity.ok().body(productService.findAll(category));
 	}
 
 	@GetMapping("/categories")
