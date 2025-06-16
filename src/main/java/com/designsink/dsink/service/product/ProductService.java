@@ -79,6 +79,12 @@ public class ProductService {
 		}
 	}
 
+	@Transactional
+	public void delete(Integer productId) {
+		productRepository.deleteById(productId);
+		productItemRepository.deleteAllByProductId(productId);
+	}
+
 	public List<Map<String, String>> getCategories() {
 		return Arrays.stream(ProductType.values())
 			.map(type -> Map.of("label", type.getLabel(), "name", type.name()))
