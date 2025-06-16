@@ -7,4 +7,5 @@ import com.designsink.dsink.entity.product.ProductItem;
 
 @Repository
 public interface ProductItemRepository extends JpaRepository<ProductItem, Integer> {
+	void deleteAllByProductId(Integer productId);
 }
