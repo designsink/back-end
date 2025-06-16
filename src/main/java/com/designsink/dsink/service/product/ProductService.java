@@ -19,6 +19,7 @@ import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.repository.product.ProductRepository;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -85,6 +86,24 @@ public class ProductService {
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
 		findProduct.delete();
+	}
+
+	public List<ProductsResponseDto> findAll(ProductType category) {
+		if (category == null) {
+			return productRepository.findDistinctById().stream()
+				.map(productItem -> ProductsResponseDto.builder()
+					.productId(productItem.getId())
+					.path(productItem.getPath())
+					.build())
+				.toList();
+		}
+
+		return productItemRepository.findAllByCategory(category).stream()
+			.map(productItem -> ProductsResponseDto.builder()
+				.productId(productItem.getProduct().getId())
+				.path(productItem.getProduct().getPath())
+				.build())
+			.toList();
 	}
 
 	public List<Map<String, String>> getCategories() {
