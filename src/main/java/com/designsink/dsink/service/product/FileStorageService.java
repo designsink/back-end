@@ -61,11 +61,12 @@ public class FileStorageService {
 		return filename;
 	}
 
-	public void delete(String filename) {
-		try {
-			Files.deleteIfExists(rootLocation.resolve(filename));
-		} catch (IOException ex) {
-			throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
-		}
-	}
+	// 논리적 삭제로 변경
+	// public void delete(String filename) {
+	// 	try {
+	// 		Files.deleteIfExists(rootLocation.resolve(filename));
+	// 	} catch (IOException ex) {
+	// 		throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
+	// 	}
+	// }
 }
