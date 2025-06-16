@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "product")
 @Entity(name = "product")
 @AllArgsConstructor
-@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter

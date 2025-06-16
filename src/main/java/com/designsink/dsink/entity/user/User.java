@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 
 @Table(name = "user")
 @Entity(name = "user")
-@SQLRestriction("is_deleted = false")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
