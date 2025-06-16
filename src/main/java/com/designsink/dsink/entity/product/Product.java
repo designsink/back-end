@@ -1,17 +1,16 @@
-package com.designsink.dsink.entity.user;
+package com.designsink.dsink.entity.product;
 
-import org.hibernate.annotations.SQLRestriction;
+import java.util.List;
 
 import com.designsink.dsink.entity.common.TimeStampEntity;
-import com.designsink.dsink.entity.user.enums.UserRole;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,28 +18,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "user")
-@Entity(name = "user")
+@Table(name = "product")
+@Entity(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class User extends TimeStampEntity {
+public class Product extends TimeStampEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private String username;
-
-	private String password;
-
 	@Column(unique = true)
-	private String email;
-
-	@Enumerated(EnumType.STRING)
-	private UserRole userRole;
+	private String path;
 
 	@Builder.Default
 	private Boolean isDeleted = false;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProductItem> productItems;
+
+	public void delete() {
+		this.isDeleted = true;
+	}
 }

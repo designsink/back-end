@@ -25,7 +25,14 @@ spring:
   jwt:
     secret: ${JWT_SECRET_KEY}
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
 logging:
   level:
     org.springframework.security: DEBUG
 
+file:
+  upload: ${FILE_UPLOAD}
