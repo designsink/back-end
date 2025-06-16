@@ -19,6 +19,7 @@ import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.repository.product.ProductRepository;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
+import com.designsink.dsink.service.product.dto.response.ProductDetailResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -90,7 +91,7 @@ public class ProductService {
 
 	public List<ProductsResponseDto> findAll(ProductType category) {
 		if (category == null) {
-			return productRepository.findDistinctById().stream()
+			return productRepository.findByIsDeletedFalseOrderByCreatedAtDesc().stream()
 				.map(productItem -> ProductsResponseDto.builder()
 					.productId(productItem.getId())
 					.path(productItem.getPath())
@@ -104,6 +105,22 @@ public class ProductService {
 				.path(productItem.getProduct().getPath())
 				.build())
 			.toList();
+	}
+
+	public ProductDetailResponseDto findById(Integer productId) {
+		Product findProduct = productRepository.findById(productId)
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+		if (findProduct.getIsDeleted()) {
+			throw new CustomException(ErrorCode.NOT_FOUND_PRODUCT);
+		}
+
+		List<ProductType> findProductTypes = productItemRepository.findDistinctCategoriesByProductId(productId);
+
+		return ProductDetailResponseDto.builder()
+			.path(findProduct.getPath())
+			.categories(findProductTypes)
+			.build();
 	}
 
 	public List<Map<String, String>> getCategories() {
