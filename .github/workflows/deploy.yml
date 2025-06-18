@@ -28,9 +28,9 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
         envs: DB_URL,DB_USERNAME,DB_PASSWORD,JWT_SECRET_KEY,FILE_UPLOAD
         script: |
           cd ~/app
