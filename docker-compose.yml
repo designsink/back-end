@@ -4,15 +4,13 @@ services:
   dsink-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-local
     restart: always
     ports:
       - "8080:8080"
     environment:
       - SPRING_CONFIG_LOCATION=classpath:/,file:/app/config/
-      - DB_URL=${DB_URL}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    env_file:
+      - .env
     volumes:
       - ./uploads:/app/uploads
