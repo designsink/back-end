@@ -47,8 +47,8 @@ jobs:
 
           # 기존 dsink-app 컨테이너 완전 정리
           echo "🧹 Cleaning up existing dsink-app containers..."
-          docker stop dsink-app || true
-          docker rm dsink-app || true
+          docker stop dsink-back || true
+          docker rm dsink-back || true
 
           # 잠시 대기 (포트 해제 대기)
           echo "⏳ Waiting for port to be released..."
@@ -56,7 +56,7 @@ jobs:
 
           # 기존 이미지 제거
           echo "🗑️ Removing old images..."
-          docker rmi dsink-app:latest || true
+          docker rmi dsink-back:latest || true
 
           # 새 이미지 빌드
           echo "🔨 Building new image..."
