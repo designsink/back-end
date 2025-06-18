@@ -94,10 +94,10 @@ public class SecurityConfig {
 		// 경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth
+			.requestMatchers("/actuator/**").permitAll()
 			.requestMatchers(HttpMethod.GET,
 				"/main-page/**",
-				"/products/**", "/products/categories",
-				"/actuator/health").permitAll()
+				"/products/**", "/products/categories").permitAll()
 			.requestMatchers("/main-page/**", "/products/**").hasRole("ADMIN")
 			.anyRequest().authenticated()
 		);

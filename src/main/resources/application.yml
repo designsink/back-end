@@ -44,6 +44,7 @@ management:
         include: health
   endpoint:
     health:
+      roles: ANONYMOUS
       show-details: when-authorized
 
 server:
