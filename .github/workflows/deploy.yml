@@ -78,7 +78,8 @@ jobs:
           # 컨테이너 실행
           echo "🚀 Starting new container..."
           docker run -d \
-            --name dsink-app \
+            --name dsink-back \
+            --network dsink \
             -p 8080:8080 \
             -v ~/app/uploads:/app/uploads \
             -e DB_URL="$DB_URL" \
@@ -87,7 +88,7 @@ jobs:
             -e JWT_SECRET_KEY="$JWT_SECRET_KEY" \
             -e FILE_UPLOAD="$FILE_UPLOAD" \
             --restart unless-stopped \
-            dsink-app:latest
+            dsink-back:latest
 
           # 컨테이너 시작 확인
           if [ $? -ne 0 ]; then
