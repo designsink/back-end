@@ -36,3 +36,15 @@ logging:
 
 file:
   upload: ${FILE_UPLOAD}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: when-authorized
+
+server:
+  port: 8080
