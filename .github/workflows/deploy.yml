@@ -1,4 +1,4 @@
-name: Deploy to dsink
+name: dsink
 
 on:
   push:
