@@ -37,13 +37,13 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build -x test
 
-    - name: Copy JAR and Docker files
+    - name: Copy JAR and Dockerfile
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        source: "build/libs/*.jar,Dockerfile,docker-compose.yml"
+        source: "build/libs/*.jar,Dockerfile"
         target: "~/app/"
 
     - name: Deploy to EC2
@@ -64,19 +64,49 @@ jobs:
           # uploads 디렉토리 생성
           mkdir -p uploads
           
-          # 기존 컨테이너 중지
-          docker compose down || true
+          # 기존 컨테이너 중지 및 제거
+          docker stop dsink-app || true
+          docker rm dsink-app || true
           
-          # 환경변수와 함께 새 이미지 빌드 및 컨테이너 실행
-          DB_URL="$DB_URL" \
-          DB_USERNAME="$DB_USERNAME" \
-          DB_PASSWORD="$DB_PASSWORD" \
-          JWT_SECRET_KEY="$JWT_SECRET_KEY" \
-          docker compose up -d --build
+          # 기존 이미지 제거
+          docker rmi dsink-app:latest || true
           
-          # 헬스체크
-          sleep 30
-          curl -f http://localhost:8080/actuator/health || exit 1
+          # 새 이미지 빌드
+          docker build -t dsink-app:latest .
+          
+          # 컨테이너 실행
+          docker run -d \
+            --name dsink-app \
+            -p 8080:8080 \
+            -v ~/app/uploads:/app/uploads \
+            -e DB_URL="$DB_URL" \
+            -e DB_USERNAME="$DB_USERNAME" \
+            -e DB_PASSWORD="$DB_PASSWORD" \
+            -e JWT_SECRET_KEY="$JWT_SECRET_KEY" \
+            --restart unless-stopped \
+            dsink-app:latest
+          
+          # 컨테이너 시작 확인
+          echo "Waiting for application to start..."
+          sleep 60
+          
+          # 헬스체크 (재시도 로직 포함)
+          for i in {1..10}; do
+            if curl -f http://localhost:8080/actuator/health; then
+              echo "✅ Health check passed!"
+              break
+            else
+              echo "⏳ Health check failed, attempt $i/10"
+              if [ $i -eq 10 ]; then
+                echo "❌ Health check failed after 10 attempts"
+                docker logs dsink-app --tail=50
+                exit 1
+              fi
+              sleep 10
+            fi
+          done
           
           # 사용하지 않는 이미지 정리
           docker image prune -f
+          
+          echo "🚀 Deployment completed successfully!"
