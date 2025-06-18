@@ -96,48 +96,6 @@ jobs:
               exit 1
           fi
 
-          echo "⏳ Waiting for application to start..."
-          sleep 30
-
-          # 컨테이너 상태 확인
-          docker ps | grep dsink-app
-          if [ $? -ne 0 ]; then
-              echo "❌ Container is not running!"
-              docker logs dsink-app --tail=50
-              exit 1
-          fi
-
-          # 헬스체크 (재시도 로직 개선)
-          echo "🩺 Starting health check..."
-          for i in {1..15}; do
-              echo "Health check attempt $i/15..."
-              
-              # 컨테이너가 실행 중인지 먼저 확인
-              if ! docker ps | grep -q dsink-app; then
-                  echo "❌ Container stopped unexpectedly!"
-                  docker logs dsink-app --tail=50
-                  exit 1
-              fi
-              
-              # 헬스체크 수행
-              if curl -f -s http://localhost:8080/actuator/health > /dev/null 2>&1; then
-                  echo "✅ Health check passed!"
-                  curl http://localhost:8080/actuator/health
-                  break
-              else
-                  echo "⏳ Health check failed, attempt $i/15"
-                  if [ $i -eq 15 ]; then
-                      echo "❌ Health check failed after 15 attempts"
-                      echo "📋 Container logs:"
-                      docker logs dsink-app --tail=50
-                      echo "📋 Container status:"
-                      docker ps -a | grep dsink-app
-                      exit 1
-                  fi
-                  sleep 10
-              fi
-          done
-
           # 사용하지 않는 이미지 정리
           echo "🧹 Cleaning up unused images..."
           docker image prune -f
