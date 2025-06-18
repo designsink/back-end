@@ -65,14 +65,14 @@ jobs:
           mkdir -p uploads
           
           # 기존 컨테이너 중지
-          docker-compose down || true
+          docker compose down || true
           
           # 환경변수와 함께 새 이미지 빌드 및 컨테이너 실행
           DB_URL="$DB_URL" \
           DB_USERNAME="$DB_USERNAME" \
           DB_PASSWORD="$DB_PASSWORD" \
           JWT_SECRET_KEY="$JWT_SECRET_KEY" \
-          docker-compose up -d --build
+          docker compose up -d --build
           
           # 헬스체크
           sleep 30
