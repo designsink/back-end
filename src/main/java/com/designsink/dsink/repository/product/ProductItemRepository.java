@@ -22,7 +22,8 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
 	@Query("""
     SELECT pi FROM product_item pi
     JOIN FETCH pi.product p
-    WHERE pi.createdAt = (
+    WHERE p.isDeleted = false
+        AND pi.createdAt = (
         SELECT MAX(pi2.createdAt)
         FROM product_item pi2
         WHERE pi2.category = pi.category
