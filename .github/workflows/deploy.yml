@@ -62,7 +62,7 @@ jobs:
               --name dsink-back \
               --network dsink \
               -p 8080:8080 \
-              -v ~/app/uploads:/app/uploads \
+              -v /home/ubuntu/app/uploads:/app/uploads \
               -e DB_URL="$DB_URL" \
               -e DB_USERNAME="$DB_USERNAME" \
               -e DB_PASSWORD="$DB_PASSWORD" \
