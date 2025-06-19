@@ -56,13 +56,9 @@ public class ProductService {
 		}
 
 		String storedFilename = storageService.store(file);
-		String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-			.path("/uploads/")
-			.path(storedFilename)
-			.toUriString();
 
 		Product newProduct = Product.builder()
-			.path(downloadUri)
+			.path(storedFilename)
 			.build();
 
 		productRepository.save(newProduct);
