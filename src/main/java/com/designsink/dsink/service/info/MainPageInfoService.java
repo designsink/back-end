@@ -1,12 +1,19 @@
 package com.designsink.dsink.service.info;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.designsink.dsink.entity.info.MainPageInfo;
+import com.designsink.dsink.entity.product.ProductItem;
+import com.designsink.dsink.entity.product.enums.ProductType;
 import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.info.MainPageInfoRepository;
+import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.service.info.dto.common.MainPageInfoDto;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class MainPageInfoService {
 
 	private final MainPageInfoRepository mainPageInfoRepository;
+	private final ProductItemRepository productItemRepository;
 
 	@Transactional
 	public void create(MainPageInfoDto requestDto) {
@@ -46,6 +54,15 @@ public class MainPageInfoService {
 	}
 
 	public MainPageInfoDto find(Integer infoId) {
+
+		List<ProductItem> findItems = productItemRepository.findLatestByEachCategory();
+
+		Map<ProductType, String> pathMap = findItems.stream()
+			.collect(Collectors.toMap(
+				ProductItem::getCategory,
+				item -> item.getProduct().getPath()
+			));
+
 		return mainPageInfoRepository.findById(infoId)
 			.map(info -> MainPageInfoDto.builder()
 				.title(info.getTitle())
@@ -57,6 +74,10 @@ public class MainPageInfoService {
 				.address(info.getAddress())
 				.storePhone(info.getStorePhone())
 				.phone(info.getPhone())
+				.sinkPath(pathMap.get(ProductType.SINK))
+				.fridgeCabinetPath(pathMap.get(ProductType.FRIDGE_CABINET))
+				.builtInClosetPath(pathMap.get(ProductType.BUILT_IN_CLOSET))
+				.customFurniturePath(pathMap.get(ProductType.CUSTOM_FURNITURE))
 				.build())
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PAGE_INFO));
 	}
