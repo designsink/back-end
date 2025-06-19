@@ -16,6 +16,7 @@ import org.springframework.util.StreamUtils;
 
 import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
+import com.designsink.dsink.infra.auth.dto.AccessTokenDto;
 import com.designsink.dsink.infra.auth.dto.CustomUserDetails;
 import com.designsink.dsink.service.user.dto.request.LoginRequestDto;
 import com.designsink.dsink.util.JWTUtil;
@@ -75,8 +76,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		try {
-			// JSON 포맷으로 메시지 작성
-			String jsonResponse = "{\"accessToken\" : "+ token +"}";
+			AccessTokenDto tokenResponse = AccessTokenDto.builder()
+				.accessToken(token)
+				.build();
+			String jsonResponse = objectMapper.writeValueAsString(tokenResponse);
 			response.getWriter().write(jsonResponse);
 			response.getWriter().flush();
 		} catch (Exception e) {
