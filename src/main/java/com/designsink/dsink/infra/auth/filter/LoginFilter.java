@@ -68,7 +68,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		String token = jwtUtil.createToken(userId, role, 30 * 24 * 60 * 60 * 1000L);
 
-		response.addHeader("Authorization", "Bearer " + token);
+		// response.addHeader("Authorization", "Bearer " + token);
 
 		// 응답 본문에 JSON 메시지 작성
 		response.setContentType("application/json;charset=UTF-8");
@@ -76,7 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		try {
 			// JSON 포맷으로 메시지 작성
-			String jsonResponse = "{\"message\":\"로그인 성공\"}";
+			String jsonResponse = "{\"accessToken\" : "+ token +"}";
 			response.getWriter().write(jsonResponse);
 			response.getWriter().flush();
 		} catch (Exception e) {
