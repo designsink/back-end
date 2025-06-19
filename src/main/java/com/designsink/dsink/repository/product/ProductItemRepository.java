@@ -18,4 +18,15 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
 
 	@Query("SELECT DISTINCT pi.category FROM product_item pi WHERE pi.product.id = :productId")
 	List<ProductType> findDistinctCategoriesByProductId(@Param("productId") Integer productId);
+
+	@Query("""
+    SELECT pi FROM product_item pi
+    JOIN FETCH pi.product p
+    WHERE pi.createdAt = (
+        SELECT MAX(pi2.createdAt)
+        FROM product_item pi2
+        WHERE pi2.category = pi.category
+    )
+    """)
+	List<ProductItem> findLatestByEachCategory();
 }
