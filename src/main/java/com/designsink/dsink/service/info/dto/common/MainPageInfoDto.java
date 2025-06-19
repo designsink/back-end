@@ -19,4 +19,8 @@ public class MainPageInfoDto {
 	private String address;
 	private String storePhone;
 	private String phone;
+	private String sinkPath;
+	private String fridgeCabinetPath;
+	private String builtInClosetPath;
+	private String customFurniturePath;
 }
