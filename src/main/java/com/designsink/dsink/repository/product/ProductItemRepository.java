@@ -29,11 +29,13 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
     SELECT pi FROM product_item pi
     JOIN FETCH pi.product p
     WHERE p.isDeleted = false
-        AND pi.createdAt = (
+      AND pi.createdAt = (
         SELECT MAX(pi2.createdAt)
         FROM product_item pi2
+        JOIN pi2.product p2
         WHERE pi2.category = pi.category
-    )
+          AND p2.isDeleted = false
+    	)
     """)
 	List<ProductItem> findLatestByEachCategory();
 }
