@@ -95,7 +95,7 @@ public class ProductService {
 				.toList();
 		}
 
-		return productItemRepository.findAllByCategory(category).stream()
+		return productItemRepository.findAllIsDeletedFalseByCategoryOrderByCreatedAtDesc(category).stream()
 			.map(productItem -> ProductsResponseDto.builder()
 				.productId(productItem.getProduct().getId())
 				.path(productItem.getProduct().getPath())
