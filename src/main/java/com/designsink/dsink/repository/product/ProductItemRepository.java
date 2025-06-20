@@ -19,6 +19,7 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
 	JOIN FETCH pi.product p
 	WHERE p.isDeleted = false
 	AND pi.category = :category
+	ORDER BY p.createdAt DESC
 	""")
 	List<ProductItem> findAllByCategoryOrderByCreatedAtDesc(@Param("category") ProductType category);
 
