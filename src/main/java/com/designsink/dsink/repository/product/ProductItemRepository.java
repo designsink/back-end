@@ -14,7 +14,13 @@ import com.designsink.dsink.entity.product.enums.ProductType;
 public interface ProductItemRepository extends JpaRepository<ProductItem, Integer> {
 	void deleteAllByProductId(Integer productId);
 
-	List<ProductItem> findAllIsDeletedFalseByCategoryOrderByCreatedAtDesc(ProductType category);
+	@Query("""
+	SELECT pi FROM product_item  pi
+	JOIN FETCH pi.product p
+	WHERE p.isDeleted = false
+	AND pi.category = :category
+	""")
+	List<ProductItem> findAllByCategoryOrderByCreatedAtDesc(@Param("category") ProductType category);
 
 	@Query("SELECT DISTINCT pi.category FROM product_item pi WHERE pi.product.id = :productId")
 	List<ProductType> findDistinctCategoriesByProductId(@Param("productId") Integer productId);
