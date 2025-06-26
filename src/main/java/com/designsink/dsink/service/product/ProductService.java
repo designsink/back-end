@@ -32,7 +32,7 @@ public class ProductService {
 	private final FileStorageService storageService;
 	private final ProductRepository productRepository;
 	private final ProductItemRepository productItemRepository;
-
+	private final FileStorageService fileStorageService;
 
 	@Transactional
 	public void save(ProductSaveRequestDto requestDto) {
@@ -83,6 +83,7 @@ public class ProductService {
 		Product findProduct = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
+		fileStorageService.delete(findProduct.getPath());
 		findProduct.delete();
 	}
 
