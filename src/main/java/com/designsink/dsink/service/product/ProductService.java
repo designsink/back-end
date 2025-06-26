@@ -36,10 +36,10 @@ public class ProductService {
 
 	@Transactional
 	public void save(ProductSaveRequestDto requestDto) {
-		MultipartFile file = requestDto.getFile();
+		List<MultipartFile> files = requestDto.getFile();
 		List<String> categories = requestDto.getCategories();
 
-		if (file.isEmpty()) {
+		if (files.isEmpty()) {
 			throw new CustomException(ErrorCode.FILE_EMPTY);
 		}
 
@@ -55,25 +55,26 @@ public class ProductService {
 			throw new CustomException(ErrorCode.FILE_CATEGORY_ERROR);
 		}
 
-		String storedFilename = storageService.store(file);
+		for (MultipartFile file : files) {
+			String storedFilename = storageService.store(file);
 
-		Product newProduct = Product.builder()
-			.path(storedFilename)
-			.build();
-
-		productRepository.save(newProduct);
-
-		List<ProductType> validCategories = categories.stream()
-			.map(ProductType::valueOf)
-			.distinct()
-			.toList();
-
-		for (ProductType category : validCategories) {
-			ProductItem productItem = ProductItem.builder()
-				.product(newProduct)
-				.category(category)
+			Product newProduct = Product.builder()
+				.path(storedFilename)
 				.build();
-			productItemRepository.save(productItem);
+			productRepository.save(newProduct);
+
+			List<ProductType> validCategories = categories.stream()
+				.map(ProductType::valueOf)
+				.distinct()
+				.toList();
+
+			for (ProductType category : validCategories) {
+				ProductItem productItem = ProductItem.builder()
+					.product(newProduct)
+					.category(category)
+					.build();
+				productItemRepository.save(productItem);
+			}
 		}
 	}
 
