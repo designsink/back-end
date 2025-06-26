@@ -89,7 +89,7 @@ public class ProductService {
 
 	public List<ProductsResponseDto> findAll(ProductType category) {
 		if (category == null) {
-			return productRepository.findByIsDeletedFalseOrderByCreatedAtDesc().stream()
+			return productRepository.findActiveProductsExcludingMainCategory().stream()
 				.map(productItem -> ProductsResponseDto.builder()
 					.productId(productItem.getId())
 					.path(productItem.getPath())
