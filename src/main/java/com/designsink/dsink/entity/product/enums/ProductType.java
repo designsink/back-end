@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ProductType {
 
+	MAIN("메인"),
 	SINK("싱크대"),
 	FRIDGE_CABINET("냉장고장"),
 	BUILT_IN_CLOSET("붙박이장"),
