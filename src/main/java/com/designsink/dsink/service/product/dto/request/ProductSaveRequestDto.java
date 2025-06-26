@@ -17,5 +17,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductSaveRequestDto {
 	private List<String> categories;
-	private MultipartFile file;
+	private List<MultipartFile> file;
 }
