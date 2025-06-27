@@ -150,7 +150,7 @@ public class ProductService {
 		List<ProductType> findProductTypes = productItemRepository.findDistinctCategoriesByProductId(productId);
 
 		return ProductDetailResponseDto.builder()
-			.path(findProduct.getThumbnailPath())
+			.path(findProduct.getOriginalPath())
 			.categories(findProductTypes)
 			.build();
 	}

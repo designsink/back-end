@@ -15,6 +15,7 @@ import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.info.MainPageInfoRepository;
 import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.service.info.dto.common.MainPageInfoDto;
+import com.designsink.dsink.service.info.dto.request.MainProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -80,5 +81,16 @@ public class MainPageInfoService {
 				.customFurniturePath(pathMap.get(ProductType.CUSTOM_FURNITURE))
 				.build())
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PAGE_INFO));
+	}
+
+	public List<MainProductsResponseDto> findAll() {
+		List<ProductItem> findMainProducts = productItemRepository.findAllByCategory(ProductType.MAIN);
+
+		return findMainProducts.stream()
+			.map(pi -> MainProductsResponseDto.builder()
+				.productId(pi.getProduct().getId())
+				.path(pi.getProduct().getOriginalPath())
+				.build())
+			.toList();
 	}
 }

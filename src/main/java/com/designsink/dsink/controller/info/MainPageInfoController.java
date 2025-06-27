@@ -1,5 +1,7 @@
 package com.designsink.dsink.controller.info;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.designsink.dsink.service.info.MainPageInfoService;
 import com.designsink.dsink.service.info.dto.common.MainPageInfoDto;
+import com.designsink.dsink.service.info.dto.request.MainProductsResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,5 +39,10 @@ public class MainPageInfoController {
 	@GetMapping("/{infoId}")
 	public ResponseEntity<MainPageInfoDto> find(@PathVariable Integer infoId) {
 		return ResponseEntity.ok().body(mainPageInfoService.find(infoId));
+	}
+
+	@GetMapping
+	public ResponseEntity<List<MainProductsResponseDto>> findAll() {
+		return ResponseEntity.ok().body(mainPageInfoService.findAll());
 	}
 }
