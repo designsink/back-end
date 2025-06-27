@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.designsink.dsink.entity.product.Product;
 import com.designsink.dsink.entity.product.ProductItem;
@@ -21,6 +24,7 @@ import com.designsink.dsink.repository.product.ProductRepository;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
 import com.designsink.dsink.service.product.dto.response.ProductDetailResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
+import com.designsink.dsink.service.product.dto.response.ProductsSliceResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -87,22 +91,49 @@ public class ProductService {
 		findProduct.delete();
 	}
 
-	public List<ProductsResponseDto> findAll(ProductType category) {
+	public ProductsResponseDto findAll(ProductType category, int page, int size) {
+		// ➊ Sort 설정
+		Sort sort;
 		if (category == null) {
-			return productRepository.findActiveProductsExcludingMainCategory().stream()
-				.map(productItem -> ProductsResponseDto.builder()
-					.productId(productItem.getId())
-					.path(productItem.getPath())
-					.build())
-				.toList();
+			sort = Sort.by("createdAt").descending();
+		} else {
+			sort = Sort.by("createdAt").descending();
 		}
 
-		return productItemRepository.findAllByCategoryOrderByCreatedAtDesc(category).stream()
-			.map(productItem -> ProductsResponseDto.builder()
-				.productId(productItem.getProduct().getId())
-				.path(productItem.getProduct().getPath())
+		// ➋ PageRequest 직접 생성
+		Pageable pageable = PageRequest.of(page, size, sort);
+
+		if (category == null) {
+			Slice<Product> slice = productRepository
+				.findActiveProductsExcludingMainCategory(pageable);
+
+			List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
+				.map(p -> ProductsSliceResponseDto.builder()
+					.productId(p.getId())
+					.path(p.getPath())
+					.build())
+				.toList();
+
+			// ➎ 결과 래퍼에 담아 반환
+			return ProductsResponseDto.builder()
+				.products(dtos)
+				.hasNext(slice.hasNext())
+				.build();
+		}
+
+		Slice<ProductItem> slice = productItemRepository.findAllByCategory(category, pageable);
+
+		List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
+			.map(pi -> ProductsSliceResponseDto.builder()
+				.productId(pi.getProduct().getId())
+				.path(pi.getProduct().getPath())
 				.build())
 			.toList();
+
+		return ProductsResponseDto.builder()
+			.products(dtos)
+			.hasNext(slice.hasNext())
+			.build();
 	}
 
 	public ProductDetailResponseDto findById(Integer productId) {
