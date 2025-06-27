@@ -30,8 +30,11 @@ public class Product extends TimeStampEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(unique = true)
-	private String path;
+	@Column(unique = true, nullable = false, length = 255)
+	private String originalPath;
+
+	@Column(unique = true, nullable = false, length = 255)
+	private String thumbnailPath;
 
 	@Builder.Default
 	private Boolean isDeleted = false;
