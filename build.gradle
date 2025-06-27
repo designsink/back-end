@@ -39,7 +39,8 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
 	implementation 'net.coobird:thumbnailator:0.4.14'
-
+	implementation 'com.twelvemonkeys.imageio:imageio-webp:3.8.0'
+	implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.0'
 }
 
 tasks.named('test') {
