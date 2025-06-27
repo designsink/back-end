@@ -2,6 +2,8 @@ package com.designsink.dsink.repository.product;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,13 +17,12 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
 	void deleteAllByProductId(Integer productId);
 
 	@Query("""
-	SELECT pi FROM product_item  pi
-	JOIN FETCH pi.product p
-	WHERE p.isDeleted = false
-	AND pi.category = :category
-	ORDER BY p.createdAt DESC
-	""")
-	List<ProductItem> findAllByCategoryOrderByCreatedAtDesc(@Param("category") ProductType category);
+    SELECT pi FROM product_item pi
+    JOIN FETCH pi.product p
+    WHERE p.isDeleted = false
+    AND pi.category = :category
+    """)
+	Slice<ProductItem> findAllByCategory(@Param("category") ProductType category, Pageable pageable);
 
 	@Query("SELECT DISTINCT pi.category FROM product_item pi WHERE pi.product.id = :productId")
 	List<ProductType> findDistinctCategoriesByProductId(@Param("productId") Integer productId);

@@ -1,7 +1,5 @@
 package com.designsink.dsink.service.product.dto.response;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductsResponseDto {
-	private List<ProductsSliceResponseDto> products;
-	private boolean hasNext;
+public class ProductsSliceResponseDto {
+	private Integer productId;
+	private String path;
 }
