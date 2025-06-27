@@ -55,7 +55,7 @@ public class FileStorageService {
 	public ImagePath store(MultipartFile file) {
 		String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
 		String originalFilename  = UUID.randomUUID() + (ext != null ? "." + ext : "");
-		String thumbnailFilename = UUID.randomUUID() + (ext != null ? "." + ext : "");
+		String thumbnailFilename = UUID.randomUUID() + ".webp";
 
 		try {
 			// 1) 원본 저장
@@ -70,6 +70,7 @@ public class FileStorageService {
 			Files.createDirectories(rootLocation.resolve("thumbnail"));
 			Thumbnails.of(originalFile)
 				.size(400, 225)
+				.outputFormat("webp")
 				.toFile(rootLocation.resolve("thumbnail").resolve(thumbnailFilename).toFile());
 
 		} catch (IOException ex) {
