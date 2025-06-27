@@ -60,7 +60,7 @@ public class MainPageInfoService {
 		Map<ProductType, String> pathMap = findItems.stream()
 			.collect(Collectors.toMap(
 				ProductItem::getCategory,
-				item -> item.getProduct().getPath()
+				item -> item.getProduct().getOriginalPath()
 			));
 
 		return mainPageInfoRepository.findById(infoId)

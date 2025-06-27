@@ -25,6 +25,7 @@ import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
 import com.designsink.dsink.service.product.dto.response.ProductDetailResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsSliceResponseDto;
+import com.designsink.dsink.service.product.record.ImagePath;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +37,6 @@ public class ProductService {
 	private final FileStorageService storageService;
 	private final ProductRepository productRepository;
 	private final ProductItemRepository productItemRepository;
-	private final FileStorageService fileStorageService;
 
 	@Transactional
 	public void save(ProductSaveRequestDto requestDto) {
@@ -60,11 +60,13 @@ public class ProductService {
 		}
 
 		for (MultipartFile file : files) {
-			String storedFilename = storageService.store(file);
+			ImagePath paths = storageService.store(file);
 
 			Product newProduct = Product.builder()
-				.path(storedFilename)
+				.originalPath(paths.originalPath())
+				.thumbnailPath(paths.thumbnailPath())
 				.build();
+
 			productRepository.save(newProduct);
 
 			List<ProductType> validCategories = categories.stream()
@@ -87,7 +89,8 @@ public class ProductService {
 		Product findProduct = productRepository.findById(productId)
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
-		fileStorageService.delete(findProduct.getPath());
+		storageService.delete(findProduct.getOriginalPath());
+		storageService.delete(findProduct.getThumbnailPath());
 		findProduct.delete();
 	}
 
@@ -110,7 +113,7 @@ public class ProductService {
 			List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
 				.map(p -> ProductsSliceResponseDto.builder()
 					.productId(p.getId())
-					.path(p.getPath())
+					.path(p.getThumbnailPath())
 					.build())
 				.toList();
 
@@ -126,7 +129,7 @@ public class ProductService {
 		List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
 			.map(pi -> ProductsSliceResponseDto.builder()
 				.productId(pi.getProduct().getId())
-				.path(pi.getProduct().getPath())
+				.path(pi.getProduct().getThumbnailPath())
 				.build())
 			.toList();
 
@@ -147,7 +150,7 @@ public class ProductService {
 		List<ProductType> findProductTypes = productItemRepository.findDistinctCategoriesByProductId(productId);
 
 		return ProductDetailResponseDto.builder()
-			.path(findProduct.getPath())
+			.path(findProduct.getThumbnailPath())
 			.categories(findProductTypes)
 			.build();
 	}
