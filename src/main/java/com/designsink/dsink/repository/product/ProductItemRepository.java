@@ -41,5 +41,12 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
     """)
 	List<ProductItem> findLatestByEachCategory();
 
-	List<ProductItem> findAllByCategory(ProductType category);
+	@Query("""
+    SELECT pi
+      FROM product_item pi
+      JOIN pi.product p
+     WHERE pi.category = :category
+       AND p.isDeleted = false
+    """)
+	List<ProductItem> findAllByCategoryAndProductIsDeletedFalse(@Param("category") ProductType category);
 }

@@ -84,7 +84,7 @@ public class MainPageInfoService {
 	}
 
 	public List<MainProductsResponseDto> findAll() {
-		List<ProductItem> findMainProducts = productItemRepository.findAllByCategory(ProductType.MAIN);
+		List<ProductItem> findMainProducts = productItemRepository.findAllByCategoryAndProductIsDeletedFalse(ProductType.MAIN);
 
 		return findMainProducts.stream()
 			.map(pi -> MainProductsResponseDto.builder()
