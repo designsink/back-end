@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductsResponseDto {
+public class ProductsSliceResponseDto {
 	private Integer productId;
 	private String path;
 }
