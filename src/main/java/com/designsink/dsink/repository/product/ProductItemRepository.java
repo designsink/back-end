@@ -40,4 +40,6 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
     	)
     """)
 	List<ProductItem> findLatestByEachCategory();
+
+	List<ProductItem> findAllByCategory(ProductType category);
 }
