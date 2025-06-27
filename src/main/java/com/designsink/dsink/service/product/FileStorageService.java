@@ -19,6 +19,8 @@ import net.coobird.thumbnailator.Thumbnails;
 import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.service.product.record.ImagePath;
+import com.sksamuel.scrimage.ImmutableImage;
+import com.sksamuel.scrimage.webp.WebpWriter;
 
 import jakarta.annotation.PostConstruct;
 
@@ -59,19 +61,19 @@ public class FileStorageService {
 
 		try {
 			// 1) 원본 저장
+			Path origDir = rootLocation.resolve("original");
+			Files.createDirectories(origDir);
+			Path origPath = origDir.resolve(originalFilename);
 			try (InputStream in = file.getInputStream()) {
-				Files.createDirectories(rootLocation.resolve("original"));
-				Files.copy(in, rootLocation.resolve("original").resolve(originalFilename),
-					StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(in, origPath, StandardCopyOption.REPLACE_EXISTING);
 			}
 
 			// 2) 썸네일 생성 및 저장 (size: 200×200)
-			File originalFile = rootLocation.resolve("original").resolve(originalFilename).toFile();
-			Files.createDirectories(rootLocation.resolve("thumbnail"));
-			Thumbnails.of(originalFile)
-				.size(400, 225)
-				.outputFormat("webp")
-				.toFile(rootLocation.resolve("thumbnail").resolve(thumbnailFilename).toFile());
+			Path thumbDir = rootLocation.resolve("thumbnail");
+			Files.createDirectories(thumbDir);
+			Path thumbPath = thumbDir.resolve(thumbnailFilename);
+
+			convertToWebpWithLossless(origPath.toFile(), thumbPath.toFile());
 
 		} catch (IOException ex) {
 			throw new CustomException(ErrorCode.FILE_STORAGE_ERROR);
@@ -89,6 +91,18 @@ public class FileStorageService {
 			Files.deleteIfExists(rootLocation.resolve(filename));
 		} catch (IOException ex) {
 			throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
+		}
+	}
+
+	private void convertToWebpWithLossless(File originalFile, File targetFile) {
+		try {
+			// scrimage 로더에서 불러와서, 크기 조정 후 lossless WebP 로 출력
+			ImmutableImage.loader()
+				.fromFile(originalFile)
+				.scaleTo(1280, 720)
+				.output(WebpWriter.DEFAULT.withLossless(), targetFile);
+		} catch (Exception e) {
+			throw new CustomException(ErrorCode.FILE_STORAGE_ERROR);
 		}
 	}
 }
