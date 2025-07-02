@@ -48,6 +48,7 @@ public class ProductService {
 			throw new CustomException(ErrorCode.FILE_EMPTY);
 		}
 
+		// 유효한 enum 검사
 		Set<String> productTypeNames = Arrays.stream(ProductType.values())
 			.map(Enum::name)
 			.collect(Collectors.toSet());
@@ -60,20 +61,29 @@ public class ProductService {
 			throw new CustomException(ErrorCode.FILE_CATEGORY_ERROR);
 		}
 
+		// 실제 enum으로 변환
+		List<ProductType> validCategories = categories.stream()
+			.map(ProductType::valueOf)
+			.distinct()
+			.toList();
+
+		// 1. 각 카테고리별 가장 큰 sequence 구하기
+		Integer maxSequence = productItemRepository.findMaxSequenceByCategories(validCategories)
+			.orElse(0); // 없으면 기본값 0
+
+		int nextSequence = maxSequence + 1;
+
+		// 2. 파일 저장 & Product + ProductItem 저장
 		for (MultipartFile file : files) {
 			ImagePath paths = storageService.store(file);
 
 			Product newProduct = Product.builder()
 				.originalPath(paths.originalPath())
 				.thumbnailPath(paths.thumbnailPath())
+				.sequence(nextSequence++)
 				.build();
 
 			productRepository.save(newProduct);
-
-			List<ProductType> validCategories = categories.stream()
-				.map(ProductType::valueOf)
-				.distinct()
-				.toList();
 
 			for (ProductType category : validCategories) {
 				ProductItem productItem = ProductItem.builder()
@@ -101,7 +111,7 @@ public class ProductService {
 		if (category == null) {
 			sort = Sort.by("createdAt").descending();
 		} else {
-			sort = Sort.by("sequence").ascending();
+			sort = Sort.by("sequence").descending();
 		}
 
 		// ➋ PageRequest 직접 생성
@@ -114,6 +124,7 @@ public class ProductService {
 			List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
 				.map(p -> ProductsSliceResponseDto.builder()
 					.productId(p.getId())
+					.sequence(p.getSequence())
 					.path(p.getThumbnailPath())
 					.build())
 				.toList();
@@ -130,6 +141,7 @@ public class ProductService {
 		List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
 			.map(pi -> ProductsSliceResponseDto.builder()
 				.productId(pi.getProduct().getId())
+				.sequence(pi.getProduct().getSequence())
 				.path(pi.getProduct().getThumbnailPath())
 				.build())
 			.toList();
