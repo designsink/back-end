@@ -49,4 +49,6 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
        AND p.isDeleted = false
     """)
 	List<ProductItem> findAllByCategoryAndProductIsDeletedFalse(@Param("category") ProductType category);
+
+	List<ProductItem> findByProductIdInAndCategory(List<Integer> ids, ProductType category);
 }
