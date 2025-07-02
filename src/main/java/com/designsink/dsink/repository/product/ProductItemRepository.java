@@ -10,12 +10,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.designsink.dsink.entity.product.Product;
 import com.designsink.dsink.entity.product.ProductItem;
 import com.designsink.dsink.entity.product.enums.ProductType;
 
 @Repository
 public interface ProductItemRepository extends JpaRepository<ProductItem, Integer> {
 	void deleteAllByProductId(Integer productId);
+
+	@Query("""
+		SELECT DISTINCT p
+		FROM product_item pi
+		JOIN pi.product p
+		WHERE pi.category = :category
+		AND p.isDeleted = false
+	""")
+	Slice<Product> findProductsByCategory(@Param("category") ProductType category, Pageable pageable);
 
 	@Query("""
     SELECT pi FROM product_item pi

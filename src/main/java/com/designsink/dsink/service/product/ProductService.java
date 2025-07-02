@@ -136,13 +136,13 @@ public class ProductService {
 				.build();
 		}
 
-		Slice<ProductItem> slice = productItemRepository.findAllByCategory(category, pageable);
+		Slice<Product> slice = productItemRepository.findProductsByCategory(category, pageable);
 
 		List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
-			.map(pi -> ProductsSliceResponseDto.builder()
-				.productId(pi.getProduct().getId())
-				.sequence(pi.getProduct().getSequence())
-				.path(pi.getProduct().getThumbnailPath())
+			.map(p -> ProductsSliceResponseDto.builder()
+				.productId(p.getId())
+				.sequence(p.getSequence())
+				.path(p.getThumbnailPath())
 				.build())
 			.toList();
 
