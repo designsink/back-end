@@ -1,6 +1,7 @@
 package com.designsink.dsink.repository.product;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -51,4 +52,14 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Intege
 	List<ProductItem> findAllByCategoryAndProductIsDeletedFalse(@Param("category") ProductType category);
 
 	List<ProductItem> findByProductIdInAndCategory(List<Integer> ids, ProductType category);
+
+	@Query("""
+    SELECT MAX(p.sequence)
+    FROM product p
+    WHERE p.id IN (
+        SELECT pi.product.id
+        FROM product_item pi
+        WHERE pi.category IN :categories)
+    """)
+	Optional<Integer> findMaxSequenceByCategories(@Param("categories") List<ProductType> categories);
 }
