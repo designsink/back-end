@@ -21,6 +21,7 @@ import com.designsink.dsink.exception.CustomException;
 import com.designsink.dsink.exception.ErrorCode;
 import com.designsink.dsink.repository.product.ProductItemRepository;
 import com.designsink.dsink.repository.product.ProductRepository;
+import com.designsink.dsink.service.product.dto.request.ProductModifyRequestDto;
 import com.designsink.dsink.service.product.dto.request.ProductSaveRequestDto;
 import com.designsink.dsink.service.product.dto.response.ProductDetailResponseDto;
 import com.designsink.dsink.service.product.dto.response.ProductsResponseDto;
@@ -159,5 +160,32 @@ public class ProductService {
 		return Arrays.stream(ProductType.values())
 			.map(type -> Map.of("label", type.getLabel(), "name", type.name()))
 			.toList();
+	}
+
+	@Transactional
+	public void modifySequences(ProductType productType, List<ProductModifyRequestDto> requestDtos) {
+		List<Integer> ids = requestDtos.stream()
+			.map(ProductModifyRequestDto::getId)
+			.toList();
+
+		// 1. category가 일치하는 ProductItem들만 조회
+		List<ProductItem> productItems = productItemRepository.findByProductIdInAndCategory(ids, productType);
+
+		// 2. ID → sequence 매핑
+		Map<Integer, Integer> idToSequenceMap = requestDtos.stream()
+			.collect(Collectors.toMap(ProductModifyRequestDto::getId, ProductModifyRequestDto::getSequence));
+
+		// 3. productId 기준 중복 제거 (한 product에 여러 item 있을 수 있음)
+		Set<Product> matchedProducts = productItems.stream()
+			.map(ProductItem::getProduct)
+			.collect(Collectors.toSet());
+
+		// 4. sequence 업데이트
+		for (Product product : matchedProducts) {
+			Integer newSequence = idToSequenceMap.get(product.getId());
+			if (newSequence != null) {
+				product.updateSequence(newSequence);
+			}
+		}
 	}
 }
