@@ -136,7 +136,7 @@ public class ProductService {
 				.build();
 		}
 
-		Slice<Product> slice = productItemRepository.findProductsByCategory(category, pageable);
+		Slice<Product> slice = productRepository.findByCategory(category, pageable);
 
 		List<ProductsSliceResponseDto> dtos = slice.getContent().stream()
 			.map(p -> ProductsSliceResponseDto.builder()
