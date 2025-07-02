@@ -39,10 +39,16 @@ public class Product extends TimeStampEntity {
 	@Builder.Default
 	private Boolean isDeleted = false;
 
+	private Integer sequence;
+
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductItem> productItems;
 
 	public void delete() {
 		this.isDeleted = true;
+	}
+
+	public void updateSequence(Integer sequence) {
+		this.sequence = sequence;
 	}
 }
