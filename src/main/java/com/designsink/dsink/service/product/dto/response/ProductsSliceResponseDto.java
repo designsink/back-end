@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductsSliceResponseDto {
 	private Integer productId;
+	private Integer sequence;
 	private String path;
 }
