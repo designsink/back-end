@@ -101,7 +101,7 @@ public class ProductService {
 		if (category == null) {
 			sort = Sort.by("createdAt").descending();
 		} else {
-			sort = Sort.by("createdAt").descending();
+			sort = Sort.by("sequence").ascending();
 		}
 
 		// ➋ PageRequest 직접 생성
