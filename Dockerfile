@@ -1,10 +1,8 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# 이미 빌드된 JAR 복사
 COPY build/libs/*.jar app.jar
 
-# 업로드·설정 디렉터리
 RUN mkdir -p /app/uploads /app/config \
     && chown -R 1000:1000 /app/uploads /app/config
 
